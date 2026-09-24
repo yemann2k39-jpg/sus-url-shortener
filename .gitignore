@@ -1,0 +1,17 @@
+# dependencies
+node_modules/
+
+# next.js build output
+.next/
+out/
+
+# runtime data (links.json is created at first run; keep it out of git)
+data/
+
+# env & logs
+.env*
+*.log
+
+# os noise
+.DS_Store
+Thumbs.db
