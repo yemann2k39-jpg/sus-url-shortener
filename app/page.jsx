@@ -1,3 +1,5 @@
+import CreateForm from "@/components/CreateForm";
+
 export default function HomePage() {
   return (
     <section className="hero">
@@ -10,12 +12,7 @@ export default function HomePage() {
         vibe is the only thing that changes.
       </p>
 
-      <div className="card placeholder-card">
-        <p className="placeholder-title">The link factory opens soon.</p>
-        <p className="placeholder-note">
-          Form under construction. The sus links are being laminated.
-        </p>
-      </div>
+      <CreateForm />
     </section>
   );
 }
