@@ -136,6 +136,9 @@ export default function CreateForm() {
         <button type="button" className="btn btn-ghost" onClick={reset}>
           Sus another one
         </button>
+        <a className="btn btn-ghost" href="/dashboard">
+          See all your sus links →
+        </a>
       </div>
     );
   }
