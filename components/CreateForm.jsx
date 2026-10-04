@@ -30,7 +30,6 @@ export default function CreateForm() {
   const [mode, setMode] = useState("redirect");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
-  const [notice, setNotice] = useState(null);
   const [result, setResult] = useState(null);
   const [qr, setQr] = useState(null);
   const [copied, setCopied] = useState(false);
@@ -43,7 +42,6 @@ export default function CreateForm() {
     }
     setBusy(true);
     setError(null);
-    setNotice(null);
     try {
       const res = await fetch("/api/links", {
         method: "POST",
@@ -64,11 +62,6 @@ export default function CreateForm() {
         })
           .then(setQr)
           .catch(() => setQr(null));
-      } else if (res.status === 409 && data.suggestion) {
-        setSlug(data.suggestion);
-        setNotice(
-          `${data.error} We suggest "${data.suggestion}" — go again.`
-        );
       } else {
         setError(data.error || "Something went sus on our side. Try again.");
       }
@@ -86,7 +79,6 @@ export default function CreateForm() {
     setUrl("");
     setSlug("");
     setMode("redirect");
-    setNotice(null);
     setError(null);
   }
 
@@ -195,7 +187,6 @@ export default function CreateForm() {
         <p className="field-hint">{MODES.find((m) => m.value === mode).hint}</p>
       </fieldset>
 
-      {notice && <p className="notice">{notice}</p>}
       {error && (
         <p className="error-text" role="alert">
           {error}

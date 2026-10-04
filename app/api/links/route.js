@@ -5,10 +5,7 @@ import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
 const ERROR_STATUS = {
   invalid_json: 400,
   invalid_url: 400,
-  invalid_slug: 400,
-  reserved_slug: 400,
   invalid_mode: 400,
-  slug_taken: 409,
   store_corrupt: 500,
   internal: 500,
 };
