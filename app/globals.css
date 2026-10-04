@@ -652,6 +652,24 @@ body {
   font-weight: 600;
 }
 
+.dash-pager {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.25rem;
+}
+
+.dash-pager a {
+  text-decoration: none;
+}
+
+.dash-page-indicator {
+  color: var(--muted);
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
 /* ---------- accessibility ---------- */
 
 :focus-visible {

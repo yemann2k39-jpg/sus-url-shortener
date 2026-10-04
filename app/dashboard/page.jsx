@@ -1,5 +1,5 @@
 import LinksTable from "@/components/LinksTable";
-import { loadLinks } from "@/lib/store";
+import { listLinks, countLinks } from "@/lib/store";
 
 // The dashboard must always reflect the store, never a cached render.
 export const dynamic = "force-dynamic";
@@ -8,10 +8,18 @@ export const metadata = {
   title: "Dashboard · Sus URL Shortener",
 };
 
-export default function DashboardPage() {
-  const links = [...loadLinks()].sort((a, b) =>
-    a.createdAt < b.createdAt ? 1 : -1
-  );
+const PER_PAGE = 25;
+
+export default async function DashboardPage({ searchParams }) {
+  const params = (await searchParams) ?? {};
+  const total = countLinks();
+  const pageCount = Math.max(1, Math.ceil(total / PER_PAGE));
+
+  let page = parseInt(params.page, 10);
+  if (!Number.isFinite(page) || page < 1) page = 1;
+  if (page > pageCount) page = pageCount;
+
+  const links = listLinks({ limit: PER_PAGE, offset: (page - 1) * PER_PAGE });
 
   return (
     <section className="dash">
@@ -19,9 +27,9 @@ export default function DashboardPage() {
         <div>
           <h1 className="dash-title">Your sus links</h1>
           <p className="dash-count">
-            {links.length === 0
+            {total === 0
               ? "zero and holding"
-              : `${links.length} link${links.length === 1 ? "" : "s"} under management`}
+              : `${total} link${total === 1 ? "" : "s"} under management`}
           </p>
         </div>
         <a className="btn btn-secondary" href="/">
@@ -38,7 +46,30 @@ export default function DashboardPage() {
           </p>
         </div>
       ) : (
-        <LinksTable links={links} />
+        <>
+          <LinksTable links={links} />
+          {pageCount > 1 && (
+            <nav className="dash-pager" aria-label="Dashboard pages">
+              {page > 1 ? (
+                <a className="btn btn-tiny" href={`/dashboard?page=${page - 1}`}>
+                  ← Newer
+                </a>
+              ) : (
+                <span />
+              )}
+              <span className="dash-page-indicator">
+                Page {page} of {pageCount}
+              </span>
+              {page < pageCount ? (
+                <a className="btn btn-tiny" href={`/dashboard?page=${page + 1}`}>
+                  Older →
+                </a>
+              ) : (
+                <span />
+              )}
+            </nav>
+          )}
+        </>
       )}
     </section>
   );
