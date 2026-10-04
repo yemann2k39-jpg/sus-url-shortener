@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { StoreError, createLink } from "@/lib/store";
+import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
 
 const ERROR_STATUS = {
   invalid_json: 400,
@@ -30,6 +31,26 @@ function errorResponse(code, message, extra = {}) {
 }
 
 export async function POST(req) {
+  const ip = clientKeyFromHeaders(req.headers);
+  const rl = rateLimit(`create:${ip}`, LIMITS.create.limit, LIMITS.create.windowMs);
+  if (!rl.ok) {
+    return NextResponse.json(
+      {
+        error:
+          "Easy, tiger. Too many links, too fast. Give it a minute and try again.",
+        code: "rate_limited",
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(
+            Math.max(1, Math.ceil((rl.resetAt - Date.now()) / 1000))
+          ),
+        },
+      }
+    );
+  }
+
   let body;
   try {
     body = await req.json();

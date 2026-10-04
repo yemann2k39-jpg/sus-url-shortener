@@ -1,7 +1,27 @@
 import { NextResponse } from "next/server";
 import { StoreError, deleteLink } from "@/lib/store";
+import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
 
-export async function DELETE(_req, { params }) {
+export async function DELETE(req, { params }) {
+  const ip = clientKeyFromHeaders(req.headers);
+  const rl = rateLimit(`remove:${ip}`, LIMITS.remove.limit, LIMITS.remove.windowMs);
+  if (!rl.ok) {
+    return NextResponse.json(
+      {
+        error: "Too many deletions, too fast. Take a breath and retry shortly.",
+        code: "rate_limited",
+      },
+      {
+        status: 429,
+        headers: {
+          "Retry-After": String(
+            Math.max(1, Math.ceil((rl.resetAt - Date.now()) / 1000))
+          ),
+        },
+      }
+    );
+  }
+
   const { slug } = await params;
   try {
     const removed = deleteLink(slug);
