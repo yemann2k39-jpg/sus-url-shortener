@@ -165,7 +165,8 @@ export default function CreateForm() {
           spellCheck={false}
         />
         <p className="field-hint">
-          Leave it empty and we&apos;ll assign a randomly sus code.
+          Every link gets a unique counter ID appended — no name is ever
+          taken.
         </p>
       </div>
 

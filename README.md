@@ -9,17 +9,17 @@ still goes to the real site. The vibe is the only thing that changes.
 ## How it works
 
 - **Create**: submit a real URL, an optional sus name (letters, numbers,
-  dashes — case doesn't count for uniqueness), and a delivery mode.
+  dashes), and a delivery mode.
   - *Instant redirect* — they click, they land on the real site.
   - *Sus page first* — a deadpan "this link is extremely sus" warning screen
     appears at the sus URL before they continue.
-- **Taken name?** The app suggests a free variation (`FakeYouTube-2`) instead
-  of just saying no. Uniqueness is enforced by a UNIQUE index — an index
-  probe, not a scan.
-- **No sus name?** You get a base36 counter code derived from the database
-  rowid (`5`, `6`, … `zz9`) — unique by construction, no collision check
-  needed. Tradeoff: counter codes are sequential and guessable. Random
-  unguessable codes would be the choice if links were meant to be secret.
+- **Names are never taken.** Every link gets a unique counter ID appended
+  (Base62 of the database rowid), so `FakeYouTube` becomes
+  `FakeYouTube-k3x9m2` — and the next person's becomes `FakeYouTube-n4y0p3`.
+  Creation performs zero existence checks: insert, take the atomic counter,
+  encode, done. Tradeoff: counter codes are sequential and guessable. Random
+  unguessable suffixes would be the choice if links were meant to be secret.
+- **No sus name?** You get just the counter code (`5`, `6`, … `zz9`).
 - **Dashboard** (`/dashboard`, button in the header): every link, newest
   first, with destination, mode pill, click count, creation date, per-row
   Copy and Delete, paginated 25 per page.
