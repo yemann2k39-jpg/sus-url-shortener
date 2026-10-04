@@ -98,6 +98,12 @@ export default function LinksTable({ links: initialLinks }) {
                   day: "numeric",
                 })}
               </span>
+              <span
+                className="dash-clicks"
+                title="Recorded clicks (flushed every few seconds)"
+              >
+                {link.clicks} hit{link.clicks === 1 ? "" : "s"}
+              </span>
             </div>
             <div className="dash-actions">
               <button

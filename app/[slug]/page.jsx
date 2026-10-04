@@ -1,5 +1,5 @@
 import { notFound, redirect } from "next/navigation";
-import { getLink } from "@/lib/store";
+import { getLink, recordClick } from "@/lib/store";
 
 function hostOf(target) {
   try {
@@ -24,6 +24,9 @@ export default async function SlugPage({ params }) {
   if (!link) {
     notFound();
   }
+
+  // Buffered in memory, flushed to SQLite on a timer - no disk write here.
+  recordClick(link.slug);
 
   if (link.mode === "redirect") {
     redirect(link.target);
