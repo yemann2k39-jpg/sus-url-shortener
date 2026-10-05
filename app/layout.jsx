@@ -12,10 +12,10 @@ export default function RootLayout({ children }) {
       <body>
         <div className="page">
           <header className="site-header">
-            <span className="wordmark">
+            <a className="wordmark" href="/">
               <span className="logo-dot" aria-hidden="true" />
-              sus://shortener
-            </span>
+              sus://url-shortener
+            </a>
             <span className="header-right">
               <span className="tagline">100% legit. 0% trusted.</span>
               <a className="btn btn-tiny header-dash-link" href="/dashboard">

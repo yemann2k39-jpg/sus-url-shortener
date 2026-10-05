@@ -20,7 +20,7 @@ export function middleware(req) {
   .badge{display:inline-block;background:#c8f135;color:#191817;font-size:.74rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;font-family:ui-monospace,Consolas,monospace;border:2px solid #191817;border-radius:999px;box-shadow:3px 3px 0 #191817;padding:.32rem .85rem;margin:0 0 1.1rem;transform:rotate(-2deg)}
   h1{font-family:Georgia,serif;font-style:italic;font-size:1.8rem;margin:0 0 .8rem}
   p{color:#6b6560;margin:0 0 1.5rem}
-  a{display:block;background:#6d28d9;color:#fff;font-weight:700;border:2px solid #191817;border-radius:10px;box-shadow:3px 3px 0 #191817;padding:.65rem 1.2rem;text-decoration:none}
+  a{display:block;background:#15803d;color:#fff;font-weight:700;border:2px solid #191817;border-radius:10px;box-shadow:3px 3px 0 #191817;padding:.65rem 1.2rem;text-decoration:none}
   code{font-family:ui-monospace,Consolas,monospace;background:#faf6ee;border:1px solid #e0d9cc;border-radius:6px;padding:.1rem .35rem}
 </style></head>
 <body><div class="card">
