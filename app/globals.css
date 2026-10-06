@@ -1,6 +1,6 @@
 /* ============================================================
    Sus URL Shortener - "friendly freaky" theme
-   Paper base + deep green + acid lime. Sticker cards,
+   Paper base + ink & acid lime. Sticker cards,
    hard ink shadows, editorial serif. Professional skeleton,
    freaky clothes.
    ============================================================ */
@@ -10,8 +10,8 @@
   --card: #ffffff;
   --ink: #191817;
   --muted: #6b6560;
-  --freak: #15803d;
-  --freak-deep: #166534;
+  --freak: #191817;
+  --freak-deep: #000000;
   --pop: #c8f135;
   --pop-soft: #eef8cf;
   --error: #c81e1e;
@@ -31,9 +31,19 @@ body {
 }
 
 body {
-  background-color: var(--bg);
-  background-image: radial-gradient(#eae3d3 1.2px, transparent 1.3px);
-  background-size: 24px 24px;
+  padding: 0.75rem;
+  background-color: #fffdf8;
+  background-image:
+    radial-gradient(ellipse 40% 45% at 12% 20%, rgba(222, 43, 139, 0.48), transparent 70%),
+    radial-gradient(ellipse 45% 40% at 85% 12%, rgba(235, 214, 48, 0.45), transparent 65%),
+    radial-gradient(ellipse 35% 40% at 95% 40%, rgba(206, 98, 34, 0.40), transparent 60%),
+    radial-gradient(ellipse 40% 45% at 88% 82%, rgba(9, 122, 55, 0.45), transparent 65%),
+    radial-gradient(ellipse 45% 40% at 55% 90%, rgba(29, 113, 173, 0.40), transparent 60%),
+    radial-gradient(ellipse 40% 40% at 45% 45%, rgba(103, 57, 138, 0.35), transparent 60%),
+    radial-gradient(ellipse 30% 35% at 5% 85%, rgba(207, 51, 31, 0.35), transparent 55%);
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
   color: var(--ink);
   font-family:
     system-ui,
@@ -51,51 +61,27 @@ body {
   color: var(--ink);
 }
 
-/* Soft decorative glows pinned to opposite corners. Fixed-position
-   pseudo-elements paint above the body background but below the page
-   content (the page lifts itself with its own stacking context). */
-body::before,
-body::after {
-  content: "";
-  position: fixed;
-  z-index: 0;
-  pointer-events: none;
-  border-radius: 50%;
-}
-
-body::before {
-  width: 46rem;
-  height: 46rem;
-  top: -16rem;
-  right: -14rem;
-  background: radial-gradient(
-    circle,
-    rgba(200, 241, 53, 0.22),
-    transparent 65%
-  );
-}
-
-body::after {
-  width: 40rem;
-  height: 40rem;
-  bottom: -15rem;
-  left: -13rem;
-  background: radial-gradient(
-    circle,
-    rgba(21, 128, 61, 0.12),
-    transparent 65%
-  );
-}
-
+/* The whole site is a "poster" — a creamy paper sheet bordered in ink,
+   pinned with a hard shadow onto the paint-wash wall behind it. Header and
+   footer lines live inside the sheet, so the frame always matches the
+   full height of the page. */
 .page {
   position: relative;
   z-index: 1;
-  max-width: 680px;
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 2rem;
-  min-height: 100vh;
+  max-width: 900px;
+  margin: 1.5rem auto 2rem;
+  min-height: calc(100vh - 4rem);
   display: flex;
   flex-direction: column;
+  padding: 0;
+  background: #fbf4e0;
+  border: 2px solid var(--border-ink);
+  border-radius: 6px;
+  box-shadow: 12px 12px 0 var(--border-ink);
+}
+
+main {
+  padding: 1.75rem 2rem 2.25rem;
 }
 
 /* ---------- header ---------- */
@@ -105,8 +91,10 @@ body::after {
   align-items: center;
   justify-content: space-between;
   gap: 1rem;
-  padding-bottom: 1rem;
+  padding: 1.15rem 2rem;
   border-bottom: 2px solid var(--border-ink);
+  background: var(--bg);
+  border-radius: 4px 4px 0 0;
 }
 
 .wordmark {
@@ -321,8 +309,10 @@ body::after {
   width: 100%;
 }
 
+/* The fun flip: hovering the big button lights it up lime. */
 .btn-primary:hover:not(:disabled) {
-  background: var(--freak-deep);
+  background: var(--pop);
+  color: var(--ink);
 }
 
 .btn-secondary {
@@ -504,8 +494,10 @@ body::after {
 
 .site-footer {
   margin-top: auto;
-  padding-top: 1.25rem;
+  padding: 1.1rem 2rem 1.2rem;
   border-top: 2px solid var(--border-ink);
+  background: var(--bg);
+  border-radius: 0 0 4px 4px;
   color: var(--muted);
   font-size: 0.8rem;
   font-family: var(--mono);
@@ -628,7 +620,7 @@ body::after {
 }
 
 .dash-clicks {
-  color: var(--freak-deep);
+  color: var(--ink);
   font-size: 0.78rem;
   font-weight: 700;
   font-family: var(--mono);
