@@ -15,3 +15,6 @@ data/
 # os noise
 .DS_Store
 Thumbs.db
+
+# tickets CLI local state
+.tickets/
