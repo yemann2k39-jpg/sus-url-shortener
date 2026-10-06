@@ -1,8 +1,27 @@
 import { NextResponse } from "next/server";
-import { StoreError, deleteLink } from "@/lib/store";
+import { StoreError, deleteLink, getLink } from "@/lib/store";
 import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
+import { hashToken, SESSION_COOKIE } from "@/lib/auth";
+import { sessionGet, userById } from "@/lib/store";
+
+function currentUser(req) {
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  if (!token) return null;
+  const session = sessionGet(hashToken(token));
+  if (!session) return null;
+  return userById(session.userId);
+}
 
 export async function DELETE(req, { params }) {
+  // Only the link's owner may delete it.
+  const user = currentUser(req);
+  if (!user) {
+    return NextResponse.json(
+      { error: "Log in to manage links.", code: "unauthorized" },
+      { status: 401 }
+    );
+  }
+
   const ip = clientKeyFromHeaders(req.headers);
   const rl = rateLimit(`remove:${ip}`, LIMITS.remove.limit, LIMITS.remove.windowMs);
   if (!rl.ok) {
@@ -24,6 +43,18 @@ export async function DELETE(req, { params }) {
 
   const { slug } = await params;
   try {
+    const existing = getLink(slug);
+    // Ownership check WITHOUT leaking existence: a foreign or unknown slug
+    // gets the same 404 either way.
+    if (!existing || existing.ownerKey !== user.ownerKey) {
+      return NextResponse.json(
+        {
+          error: `No sus link answers to "${slug}".`,
+          code: "not_found",
+        },
+        { status: 404 }
+      );
+    }
     const removed = deleteLink(slug);
     if (!removed) {
       return NextResponse.json(
