@@ -1,14 +1,22 @@
 import { NextResponse } from "next/server";
-import { StoreError, createLink } from "@/lib/store";
+import { StoreError, createLink, userBySessionToken } from "@/lib/store";
 import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
+import { hashToken, SESSION_COOKIE } from "@/lib/auth";
 
 const ERROR_STATUS = {
   invalid_json: 400,
   invalid_url: 400,
   invalid_mode: 400,
+  unauthorized: 401,
   store_corrupt: 500,
   internal: 500,
 };
+
+export function currentUser(req) {
+  const token = req.cookies.get(SESSION_COOKIE)?.value;
+  if (!token) return null;
+  return userBySessionToken(hashToken(token));
+}
 
 function originFromRequest(req) {
   const host =
@@ -28,6 +36,12 @@ function errorResponse(code, message, extra = {}) {
 }
 
 export async function POST(req) {
+  // Only members create links - anonymous requests get bounced here.
+  const user = currentUser(req);
+  if (!user) {
+    return errorResponse("unauthorized", "Log in to create links.");
+  }
+
   const ip = clientKeyFromHeaders(req.headers);
   const rl = rateLimit(`create:${ip}`, LIMITS.create.limit, LIMITS.create.windowMs);
   if (!rl.ok) {
@@ -64,6 +78,7 @@ export async function POST(req) {
       url: body.url,
       slug: body.slug,
       mode: body.mode ?? "redirect",
+      ownerKey: user.ownerKey,
     });
     const susUrl = `${originFromRequest(req).replace(/\/+$/, "")}/${record.slug}`;
     return NextResponse.json(
