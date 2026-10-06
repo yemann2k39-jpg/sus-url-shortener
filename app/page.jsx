@@ -1,6 +1,11 @@
 import CreateForm from "@/components/CreateForm";
+import { getCurrentUser } from "@/lib/session";
 
-export default function HomePage() {
+export const dynamic = "force-dynamic";
+
+export default async function HomePage() {
+  const user = await getCurrentUser();
+
   return (
     <section className="hero">
       <h1>
@@ -12,7 +17,17 @@ export default function HomePage() {
         vibe is the only thing that changes.
       </p>
 
-      <CreateForm />
+      {user ? (
+        <CreateForm />
+      ) : (
+        <div className="card auth-card">
+          <p className="placeholder-title">Link creation is for members.</p>
+          <p className="placeholder-note">
+            <a href="/login">Log in or register</a> — it takes twenty seconds
+            and your links stay yours alone.
+          </p>
+        </div>
+      )}
     </section>
   );
 }

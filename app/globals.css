@@ -716,6 +716,55 @@ main {
   font-size: 0.8rem;
 }
 
+/* ---------- auth ---------- */
+
+.auth-card {
+  max-width: 460px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.user-chip {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  font-weight: 700;
+  background: var(--pop-soft);
+  border: 1px solid #d8ec9f;
+  border-radius: 999px;
+  padding: 0.16rem 0.6rem;
+}
+
+/* ---------- pagination numbers ---------- */
+
+.pager-numbers {
+  display: inline-flex;
+  gap: 0.3rem;
+  align-items: center;
+}
+
+.pager-num {
+  min-width: 1.9rem;
+  text-align: center;
+  padding: 0.28rem 0.3rem;
+  border-radius: 6px;
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  color: var(--muted);
+  text-decoration: none;
+}
+
+.pager-num:hover {
+  background: var(--pop-soft);
+  color: var(--ink);
+}
+
+.pager-num.active {
+  background: var(--ink);
+  color: #fff;
+  font-weight: 700;
+}
+
 /* ---------- accessibility ---------- */
 
 :focus-visible {
