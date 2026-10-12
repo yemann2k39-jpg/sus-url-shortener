@@ -34,13 +34,13 @@ export async function POST(req) {
 
   try {
     const { username, email, password } = validateRegistration(body);
-    if (userByUsername(username)) {
+    if (await userByUsername(username)) {
       return NextResponse.json(
         { error: "That username is already taken.", code: "duplicate_username" },
         { status: 409 }
       );
     }
-    if (userByEmail(email)) {
+    if (await userByEmail(email)) {
       return NextResponse.json(
         { error: "That email already has an account.", code: "duplicate_email" },
         { status: 409 }
@@ -48,11 +48,11 @@ export async function POST(req) {
     }
     const ownerKey = newOwnerKey();
     const passwordHash = hashPassword(password);
-    const user = createUser({ username, email, passwordHash, ownerKey });
+    const user = await createUser({ username, email, passwordHash, ownerKey });
 
     // Verification is mandatory: no session until the emailed link is clicked.
     const rawToken = newVerificationToken();
-    verificationTokenInsert(hashToken(rawToken), user.id, verificationExpiry(24));
+    await verificationTokenInsert(hashToken(rawToken), user.id, verificationExpiry(24));
     const origin = req.nextUrl?.origin ?? new URL(req.url).origin;
     const verifyLink = `${origin}/api/auth/verify?token=${rawToken}`;
     let mailResult;

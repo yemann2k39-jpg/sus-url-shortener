@@ -32,13 +32,13 @@ export async function POST(req) {
     message: "If that email has an unverified account, a fresh verification link is on its way.",
   };
 
-  const user = email ? userByEmail(email) : null;
+  const user = email ? await userByEmail(email) : null;
   if (!user || user.emailVerified) {
     return NextResponse.json(generic, { status: 200 });
   }
 
   const rawToken = newVerificationToken();
-  verificationTokenInsert(hashToken(rawToken), user.id, verificationExpiry(24));
+  await verificationTokenInsert(hashToken(rawToken), user.id, verificationExpiry(24));
   const origin = req.nextUrl?.origin ?? new URL(req.url).origin;
   const verifyLink = `${origin}/api/auth/verify?token=${rawToken}`;
   try {

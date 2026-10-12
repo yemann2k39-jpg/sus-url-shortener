@@ -13,7 +13,7 @@ const ERROR_STATUS = {
   internal: 500,
 };
 
-export function currentUser(req) {
+export async function currentUser(req) {
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   if (!token) return null;
   return userBySessionToken(hashToken(token));
@@ -38,7 +38,7 @@ function errorResponse(code, message, extra = {}) {
 
 export async function POST(req) {
   // Only members create links - anonymous requests get bounced here.
-  const user = currentUser(req);
+  const user = await currentUser(req);
   if (!user) {
     return errorResponse("unauthorized", "Log in to create links.");
   }
@@ -75,7 +75,7 @@ export async function POST(req) {
   }
 
   try {
-    const record = createLink({
+    const record = await createLink({
       url: body.url,
       slug: body.slug,
       mode: body.mode ?? "redirect",

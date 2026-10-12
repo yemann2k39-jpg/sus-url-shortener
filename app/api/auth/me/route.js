@@ -7,11 +7,11 @@ export async function GET(req) {
   if (!token) {
     return NextResponse.json({ error: "Not logged in.", code: "unauthorized" }, { status: 401 });
   }
-  const session = sessionGet(hashToken(token));
+  const session = await sessionGet(hashToken(token));
   if (!session) {
     return NextResponse.json({ error: "Not logged in.", code: "unauthorized" }, { status: 401 });
   }
-  const user = userById(session.userId);
+  const user = await userById(session.userId);
   if (!user) {
     return NextResponse.json({ error: "Not logged in.", code: "unauthorized" }, { status: 401 });
   }

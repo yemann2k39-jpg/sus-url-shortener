@@ -19,7 +19,7 @@ function hostOf(target) {
  */
 export default async function SlugPage({ params }) {
   const { slug } = await params;
-  const link = getLink(slug);
+  const link = await getLink(slug);
 
   if (!link) {
     notFound();

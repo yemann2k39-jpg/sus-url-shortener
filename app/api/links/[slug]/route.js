@@ -4,17 +4,17 @@ import { rateLimit, LIMITS, clientKeyFromHeaders } from "@/lib/ratelimit";
 import { hashToken, SESSION_COOKIE } from "@/lib/auth";
 import { sessionGet, userById } from "@/lib/store";
 
-function currentUser(req) {
+async function currentUser(req) {
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  const session = sessionGet(hashToken(token));
+  const session = await sessionGet(hashToken(token));
   if (!session) return null;
   return userById(session.userId);
 }
 
 export async function DELETE(req, { params }) {
   // Only the link's owner may delete it.
-  const user = currentUser(req);
+  const user = await currentUser(req);
   if (!user) {
     return NextResponse.json(
       { error: "Log in to manage links.", code: "unauthorized" },
@@ -43,7 +43,7 @@ export async function DELETE(req, { params }) {
 
   const { slug } = await params;
   try {
-    const existing = getLink(slug);
+    const existing = await getLink(slug);
     // Ownership check WITHOUT leaking existence: a foreign or unknown slug
     // gets the same 404 either way.
     if (!existing || existing.ownerKey !== user.ownerKey) {
@@ -55,7 +55,7 @@ export async function DELETE(req, { params }) {
         { status: 404 }
       );
     }
-    const removed = deleteLink(slug);
+    const removed = await deleteLink(slug);
     if (!removed) {
       return NextResponse.json(
         {

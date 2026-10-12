@@ -35,8 +35,8 @@ export async function POST(req) {
   try {
     // Username or email both work as the login key.
     const user =
-      (identifier && userByUsername(identifier.toLowerCase())) ||
-      (identifier && userByEmail(identifier.toLowerCase()));
+      (identifier && (await userByUsername(identifier.toLowerCase()))) ||
+      (identifier && (await userByEmail(identifier.toLowerCase())));
     if (!user || !verifyPassword(password, user.passwordHash)) {
       return NextResponse.json(
         { error: "Wrong username or password.", code: "invalid_credentials" },

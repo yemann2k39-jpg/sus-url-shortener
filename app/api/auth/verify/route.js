@@ -12,13 +12,13 @@ export async function GET(req) {
   let target = "/verify?status=invalid";
 
   if (raw) {
-    const consumed = verificationTokenConsume(hashToken(raw));
+    const consumed = await verificationTokenConsume(hashToken(raw));
     if (consumed) {
-      setUserEmailVerified(consumed.userId);
-      const user = userById(consumed.userId);
+      await setUserEmailVerified(consumed.userId);
+      const user = await userById(consumed.userId);
       if (user) {
         const token = newSessionToken();
-        sessionInsert(hashToken(token), user.id, sessionExpiry(7));
+        await sessionInsert(hashToken(token), user.id, sessionExpiry(7));
         const resp = NextResponse.redirect(new URL("/verify?status=ok", req.nextUrl.origin), { status: 303 });
         resp.cookies.set(SESSION_COOKIE, token, {
           httpOnly: true,

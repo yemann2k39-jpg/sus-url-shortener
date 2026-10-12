@@ -19,14 +19,14 @@ export default async function DashboardPage({ searchParams }) {
   }
 
   const params = (await searchParams) ?? {};
-  const total = countLinks(user.ownerKey);
+  const total = await countLinks(user.ownerKey);
   const pageCount = Math.max(1, Math.ceil(total / PER_PAGE));
 
   let page = parseInt(params.page, 10);
   if (!Number.isFinite(page) || page < 1) page = 1;
   if (page > pageCount) page = pageCount;
 
-  const links = listLinks({
+  const links = await listLinks({
     limit: PER_PAGE,
     offset: (page - 1) * PER_PAGE,
     ownerKey: user.ownerKey,
