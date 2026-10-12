@@ -777,6 +777,34 @@ main {
   cursor: pointer;
 }
 
+/* change-password section on the dashboard */
+.dash-account {
+  margin-top: 1.6rem;
+  display: flex;
+  justify-content: flex-start;
+}
+
+.pw-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 1.3rem 1.4rem 1.5rem;
+  margin-top: 0.4rem;
+}
+
+.pw-card .placeholder-title {
+  margin: 0 0 1rem;
+}
+
+.pw-actions {
+  display: flex;
+  gap: 0.7rem;
+  margin-top: 1.1rem;
+}
+
+.pw-toggle {
+  flex-shrink: 0;
+}
+
 .user-chip {
   color: var(--ink);
   font-family: var(--mono);

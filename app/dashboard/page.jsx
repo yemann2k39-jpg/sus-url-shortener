@@ -1,4 +1,5 @@
 import LinksTable from "@/components/LinksTable";
+import ChangePasswordForm from "@/components/ChangePasswordForm";
 import { getCurrentUser } from "@/lib/session";
 import { redirect } from "next/navigation";
 import { listLinks, countLinks } from "@/lib/store";
@@ -98,6 +99,10 @@ export default async function DashboardPage({ searchParams }) {
           )}
         </>
       )}
+
+      <div className="dash-account">
+        <ChangePasswordForm />
+      </div>
     </section>
   );
 }
