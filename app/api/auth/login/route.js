@@ -53,8 +53,11 @@ export async function POST(req) {
       );
     }
 
+    // "Remember me" stretches the session to 30 days; default stays 7.
+    const days = body?.remember === true ? 30 : 7;
+
     const token = newSessionToken();
-    sessionInsert(hashToken(token), user.id, sessionExpiry(7));
+    await sessionInsert(hashToken(token), user.id, sessionExpiry(days));
     const resp = NextResponse.json(
       { user: { username: user.username, email: user.email, ownerKey: user.ownerKey, createdAt: user.createdAt } },
       { status: 200 }
@@ -63,7 +66,7 @@ export async function POST(req) {
       httpOnly: true,
       sameSite: "lax",
       path: "/",
-      maxAge: 7 * 24 * 60 * 60,
+      maxAge: days * 24 * 60 * 60,
     });
     return resp;
   } catch (err) {

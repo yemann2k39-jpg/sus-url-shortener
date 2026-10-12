@@ -13,6 +13,7 @@ export default function AuthForm({ initialTab = "login" }) {
   const [error, setError] = useState(null);
   const [registered, setRegistered] = useState(null); // { email, devVerifyLink }
   const [unverified, setUnverified] = useState(false);
+  const [remember, setRemember] = useState(false);
 
   async function submit(event) {
     event.preventDefault();
@@ -21,7 +22,7 @@ export default function AuthForm({ initialTab = "login" }) {
     try {
       const payload =
         tab === "login"
-          ? { identifier: username.trim(), password }
+          ? { identifier: username.trim(), password, remember }
           : { username: username.trim(), email: email.trim(), password };
       const res = await fetch(`/api/auth/${tab}`, {
         method: "POST",
@@ -156,6 +157,18 @@ export default function AuthForm({ initialTab = "login" }) {
               </>
             )}
           </p>
+        )}
+
+        {tab === "login" && (
+          <div className="remember-row">
+            <input
+              id="auth-remember"
+              type="checkbox"
+              checked={remember}
+              onChange={(e) => setRemember(e.target.checked)}
+            />
+            <label htmlFor="auth-remember">Remember me for 30 days</label>
+          </div>
         )}
 
         <button className="btn btn-primary" type="submit" disabled={busy}>
