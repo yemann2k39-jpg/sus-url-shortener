@@ -2,8 +2,8 @@
 
 import { useState } from "react";
 
-export default function ResendForm() {
-  const [email, setEmail] = useState("");
+export default function ResendForm({ initialEmail = "" }) {
+  const [email, setEmail] = useState(initialEmail);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState(null);
   const [devLink, setDevLink] = useState(null);

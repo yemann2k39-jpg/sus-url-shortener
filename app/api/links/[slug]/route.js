@@ -9,7 +9,9 @@ async function currentUser(req) {
   if (!token) return null;
   const session = await sessionGet(hashToken(token));
   if (!session) return null;
-  return userById(session.userId);
+  const user = await userById(session.userId);
+  // Verification gate: only verified owners may delete links.
+  return user && user.emailVerified ? user : null;
 }
 
 export async function DELETE(req, { params }) {

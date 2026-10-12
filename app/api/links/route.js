@@ -16,7 +16,9 @@ const ERROR_STATUS = {
 export async function currentUser(req) {
   const token = req.cookies.get(SESSION_COOKIE)?.value;
   if (!token) return null;
-  return userBySessionToken(hashToken(token));
+  const user = await userBySessionToken(hashToken(token));
+  // Verification gate: no verified email, no link creation.
+  return user && user.emailVerified ? user : null;
 }
 
 function originFromRequest(req) {

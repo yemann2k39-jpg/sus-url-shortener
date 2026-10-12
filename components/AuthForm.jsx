@@ -41,7 +41,12 @@ export default function AuthForm({ initialTab = "login" }) {
         return;
       }
       setError(data.error || "Something went sus on our side. Try again.");
-      setUnverified(data.code === "unverified");
+      if (data.code === "unverified") {
+        // Unverified accounts never get in — send them straight to the verify page.
+        const hint = data.email ? `?email=${encodeURIComponent(data.email)}` : "";
+        router.push(`/verify${hint}`);
+        return;
+      }
     } catch {
       setError("Couldn't reach the sus factory. Is the server running?");
     } finally {

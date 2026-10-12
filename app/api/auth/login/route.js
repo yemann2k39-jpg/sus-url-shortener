@@ -44,10 +44,13 @@ export async function POST(req) {
       );
     }
     if (!user.emailVerified) {
+      // Hard gate: unverified accounts never get in. The client bounces them
+      // to /verify; we also pass the email back so the resend form pre-fills.
       return NextResponse.json(
         {
           error: "Your email isn't verified yet. Check your inbox for the verification link, or resend it from the verify page.",
           code: "unverified",
+          email: user.email,
         },
         { status: 403 }
       );

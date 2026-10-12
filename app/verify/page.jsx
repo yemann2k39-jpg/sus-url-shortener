@@ -9,6 +9,7 @@ export const metadata = {
 export default async function VerifyPage({ searchParams }) {
   const params = (await searchParams) ?? {};
   const status = params.status === "ok" ? "ok" : params.status === "invalid" ? "invalid" : null;
+  const email = typeof params.email === "string" ? params.email : "";
 
   return (
     <section className="hero">
@@ -31,7 +32,7 @@ export default async function VerifyPage({ searchParams }) {
             Verification links expire after 24 hours and can only be used once.
             Enter your email below and we&rsquo;ll send a fresh one.
           </p>
-          <ResendForm />
+          <ResendForm initialEmail={email} />
         </div>
       ) : (
         <div className="card auth-card">
@@ -41,7 +42,7 @@ export default async function VerifyPage({ searchParams }) {
             verification link. Didn&rsquo;t get it? Check spam — the sender is
             suspiciously legitimate.
           </p>
-          <ResendForm />
+          <ResendForm initialEmail={email} />
         </div>
       )}
     </section>
