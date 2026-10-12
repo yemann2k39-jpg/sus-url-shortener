@@ -5,7 +5,7 @@ import { redirect } from "next/navigation";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Log in · Sus URL Shortener",
+  title: "Log in",
 };
 
 export default async function LoginPage({ searchParams }) {

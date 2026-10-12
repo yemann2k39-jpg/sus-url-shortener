@@ -7,7 +7,7 @@ import { listLinks, countLinks } from "@/lib/store";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Dashboard · Sus URL Shortener",
+  title: "Dashboard",
 };
 
 const PER_PAGE = 10;

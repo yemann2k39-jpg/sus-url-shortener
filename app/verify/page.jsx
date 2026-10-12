@@ -3,7 +3,7 @@ import ResendForm from "@/components/ResendForm";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "Verify your email · Sus URL Shortener",
+  title: "Verify your email",
 };
 
 export default async function VerifyPage({ searchParams }) {

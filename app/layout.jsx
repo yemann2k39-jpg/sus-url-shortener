@@ -2,10 +2,36 @@ import "./globals.css";
 import LogoutButton from "@/components/LogoutButton";
 import { getCurrentUser } from "@/lib/session";
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? "http://localhost:3210";
+
 export const metadata = {
-  title: "Sus URL Shortener",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Sus URL Shortener",
+    template: "%s · Sus URL Shortener",
+  },
   description:
     "Turn any perfectly legitimate URL into something deeply suspicious.",
+  applicationName: "Sus URL Shortener",
+  openGraph: {
+    type: "website",
+    siteName: "Sus URL Shortener",
+    title: "Sus URL Shortener",
+    description:
+      "Turn any perfectly legitimate URL into something deeply suspicious.",
+    url: SITE_URL,
+  },
+  twitter: {
+    card: "summary",
+    title: "Sus URL Shortener",
+    description:
+      "Turn any perfectly legitimate URL into something deeply suspicious.",
+  },
+  icons: { icon: "/favicon.svg" },
+};
+
+export const viewport = {
+  themeColor: "#fbf4e0",
 };
 
 export default async function RootLayout({ children }) {
