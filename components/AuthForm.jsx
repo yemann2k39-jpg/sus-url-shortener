@@ -11,6 +11,8 @@ export default function AuthForm({ initialTab = "login" }) {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState(null);
+  const [registered, setRegistered] = useState(null); // { email, devVerifyLink }
+  const [unverified, setUnverified] = useState(false);
 
   async function submit(event) {
     event.preventDefault();
@@ -28,16 +30,47 @@ export default function AuthForm({ initialTab = "login" }) {
       });
       const data = await res.json().catch(() => ({}));
       if (res.ok) {
+        if (tab === "register") {
+          // Verification is mandatory: no session yet — show the check-your-inbox panel.
+          setRegistered({ email: data.email ?? email.trim(), devVerifyLink: data.devVerifyLink ?? null });
+          return;
+        }
         router.push("/dashboard");
         router.refresh();
         return;
       }
       setError(data.error || "Something went sus on our side. Try again.");
+      setUnverified(data.code === "unverified");
     } catch {
       setError("Couldn't reach the sus factory. Is the server running?");
     } finally {
       setBusy(false);
     }
+  }
+
+  if (registered) {
+    return (
+      <div className="card auth-card">
+        <div className="segmented" role="tablist" aria-label="Login or register">
+          <button type="button" role="tab" aria-selected="false" className="seg">Log in</button>
+          <button type="button" role="tab" aria-selected="true" className="seg active">Register</button>
+        </div>
+        <p className="placeholder-title">Almost there — verify your email.</p>
+        <p className="placeholder-note">
+          We sent a verification link to <strong>{registered.email}</strong>.
+          Click it (within 24 hours) and your account goes live.
+        </p>
+        {registered.devVerifyLink && (
+          <p className="placeholder-note">
+            Dev mode (no mail key configured) — verify directly:{" "}
+            <a href={registered.devVerifyLink}>open verification link</a>
+          </p>
+        )}
+        <p className="placeholder-note">
+          Didn&rsquo;t get it? <a href="/verify">Resend the link</a>.
+        </p>
+      </div>
+    );
   }
 
   return (
@@ -72,7 +105,7 @@ export default function AuthForm({ initialTab = "login" }) {
             id="auth-username"
             type="text"
             autoComplete={tab === "login" ? "username" : "off"}
-            placeholder={tab === "login" ? "you or you@test.local" : "pick a name"}
+            placeholder={tab === "login" ? "your username" : "pick a name"}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             spellCheck={false}
@@ -94,7 +127,7 @@ export default function AuthForm({ initialTab = "login" }) {
               onChange={(e) => setEmail(e.target.value)}
               spellCheck={false}
             />
-            <p className="field-hint">One account per email. Stored, never verified — this thing runs on your machine.</p>
+            <p className="field-hint">One account per email. Verification required.</p>
           </div>
         )}
 
@@ -116,6 +149,12 @@ export default function AuthForm({ initialTab = "login" }) {
         {error && (
           <p className="error-text" role="alert">
             {error}
+            {unverified && (
+              <>
+                {" "}
+                <a href="/verify">Resend the link.</a>
+              </>
+            )}
           </p>
         )}
 

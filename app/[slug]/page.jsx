@@ -38,18 +38,16 @@ export default async function SlugPage({ params }) {
     <section className="sus-page">
       <div className="card sus-card">
         <p className="sus-badge">Sus link detected</p>
-        <h1 className="sus-title">This link is extremely sus.</h1>
+        <h1 className="sus-title">This link is extremely suspicious.</h1>
         <p className="sus-copy">
-          You have arrived via the Sus URL Shortener. This link claims to take
-          you to <strong>{host}</strong>. It probably will. We can neither
-          confirm nor deny anything beyond that.
+          You&rsquo;ve arrived via Sus URL Shortener. This link claims to lead
+          to <strong>{host}</strong>. It almost certainly does. Beyond that, we
+          make no guarantees.
         </p>
         <a className="btn btn-primary sus-continue" href={link.target}>
           Continue to {host}
         </a>
-        <p className="sus-fineprint">
-          Or don&apos;t. The choice was always yours, allegedly.
-        </p>
+        <p className="sus-fineprint">Or stay here. Nobody&rsquo;s forcing you.</p>
       </div>
     </section>
   );

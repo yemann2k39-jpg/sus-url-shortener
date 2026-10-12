@@ -5,12 +5,12 @@ import {
   validateRegistration,
   hashPassword,
   newOwnerKey,
-  newSessionToken,
+  newVerificationToken,
   hashToken,
-  sessionExpiry,
-  SESSION_COOKIE,
+  verificationExpiry,
 } from "@/lib/auth";
-import { createUser, userByUsername, userByEmail, sessionInsert } from "@/lib/store";
+import { createUser, userByUsername, userByEmail, verificationTokenInsert } from "@/lib/store";
+import { sendVerificationEmail } from "@/lib/mailer";
 
 export async function POST(req) {
   const ip = clientKeyFromHeaders(req.headers);
@@ -50,20 +50,35 @@ export async function POST(req) {
     const passwordHash = hashPassword(password);
     const user = createUser({ username, email, passwordHash, ownerKey });
 
-    // Auto-login on registration.
-    const token = newSessionToken();
-    sessionInsert(hashToken(token), user.id, sessionExpiry(7));
-    const resp = NextResponse.json(
-      { user: { username: user.username, email: user.email, ownerKey: user.ownerKey, createdAt: user.createdAt } },
+    // Verification is mandatory: no session until the emailed link is clicked.
+    const rawToken = newVerificationToken();
+    verificationTokenInsert(hashToken(rawToken), user.id, verificationExpiry(24));
+    const origin = req.nextUrl?.origin ?? new URL(req.url).origin;
+    const verifyLink = `${origin}/api/auth/verify?token=${rawToken}`;
+    let mailResult;
+    try {
+      mailResult = await sendVerificationEmail({ email, username, link: verifyLink });
+    } catch (mailErr) {
+      console.error("verification email failed:", mailErr?.message ?? mailErr);
+      return NextResponse.json(
+        {
+          error: "Account created, but the verification email could not be sent. Try logging in later to resend it.",
+          code: "mail_failed",
+        },
+        { status: 201 }
+      );
+    }
+    return NextResponse.json(
+      {
+        ok: true,
+        username: user.username,
+        email: user.email,
+        // Only present in dev mode (no BREVO_API_KEY): lets local testing
+        // complete the flow without a real inbox.
+        devVerifyLink: mailResult.dev ? mailResult.link : undefined,
+      },
       { status: 201 }
     );
-    resp.cookies.set(SESSION_COOKIE, token, {
-      httpOnly: true,
-      sameSite: "lax",
-      path: "/",
-      maxAge: 7 * 24 * 60 * 60,
-    });
-    return resp;
   } catch (err) {
     if (err instanceof AuthError) {
       return NextResponse.json({ error: err.message, code: err.code }, { status: 400 });

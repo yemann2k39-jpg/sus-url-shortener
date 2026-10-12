@@ -7,22 +7,14 @@ const MODES = [
   {
     value: "redirect",
     label: "Instant redirect",
-    hint: "They click, they land on the real site. No warning, no mercy.",
+    hint: "Users go straight to the real site when they click.",
   },
   {
     value: "sus",
     label: "Sus page first",
-    hint: "A deadpan warning screen stares at them before the handoff.",
+    hint: "Displays a warning screen before sending them to the site.",
   },
 ];
-
-function hostOf(target) {
-  try {
-    return new URL(target).host;
-  } catch {
-    return target;
-  }
-}
 
 export default function CreateForm() {
   const [url, setUrl] = useState("");
@@ -95,7 +87,7 @@ export default function CreateForm() {
   if (result) {
     return (
       <div className="card result-card" aria-live="polite">
-        <p className="result-kicker">Your sus link is ready.</p>
+        <p className="result-kicker">Your link is ready.</p>
         <div className="result-link-row">
           <a
             className="result-link"
@@ -109,11 +101,6 @@ export default function CreateForm() {
             {copied ? "Copied." : "Copy"}
           </button>
         </div>
-        <p className="result-note">
-          Actually goes to <strong>{hostOf(result.target)}</strong>
-          {" · "}
-          {result.mode === "sus" ? "sus page first" : "instant redirect"}
-        </p>
         {qr ? (
           <img
             className="qr"
@@ -126,10 +113,10 @@ export default function CreateForm() {
           <p className="result-note">QR code is camera-shy right now.</p>
         )}
         <button type="button" className="btn btn-ghost" onClick={reset}>
-          Sus another one
+          Create another one
         </button>
         <a className="btn btn-ghost" href="/dashboard">
-          See all your sus links →
+          See all your links →
         </a>
       </div>
     );
@@ -161,13 +148,10 @@ export default function CreateForm() {
           placeholder="FakeYouTube"
           value={slug}
           onChange={(event) => setSlug(event.target.value)}
+          maxLength={40}
           autoComplete="off"
           spellCheck={false}
         />
-        <p className="field-hint">
-          Every link gets a unique counter ID appended — no name is ever
-          taken.
-        </p>
       </div>
 
       <fieldset className="field mode-field">

@@ -20,11 +20,11 @@ export default async function LoginPage({ searchParams }) {
   return (
     <section className="hero">
       <h1>
-        Enter the <em>sus headquarters.</em>
+        Make any link <em>deeply suspicious.</em>
       </h1>
       <p className="lede">
-        Log in to manage your link collection. Every link you create is filed
-        under your own secret owner key — nobody else can see or touch them.
+        Log in to manage your saved links. All your custom URLs are tied to
+        your private account key so only you can view or edit them.
       </p>
       <AuthForm initialTab={initialTab} />
     </section>

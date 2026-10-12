@@ -7,6 +7,7 @@ const ERROR_STATUS = {
   invalid_json: 400,
   invalid_url: 400,
   invalid_mode: 400,
+  invalid_slug: 400,
   unauthorized: 401,
   store_corrupt: 500,
   internal: 500,

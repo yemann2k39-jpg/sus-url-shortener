@@ -2,9 +2,11 @@
 
 import { useState } from "react";
 
-function hostOf(target) {
+/** www.youtube.com/watch?v=abc… — host + path, protocol stripped. */
+function displayTarget(target) {
   try {
-    return new URL(target).host;
+    const url = new URL(target);
+    return (url.host + url.pathname + url.search).replace(/\/$/, "");
   } catch {
     return target;
   }
@@ -72,18 +74,10 @@ export default function LinksTable({ links: initialLinks }) {
       <ul className="dash-list">
         {links.map((link) => (
           <li className="dash-row" key={link.slug}>
-            <div className="dash-main">
+            <div className="dash-top">
               <a className="dash-slug" href={`/${link.slug}`}>
                 /{link.slug}
               </a>
-              <span className="dash-arrow" aria-hidden="true">
-                →
-              </span>
-              <span className="dash-target" title={link.target}>
-                {hostOf(link.target)}
-              </span>
-            </div>
-            <div className="dash-meta">
               <span
                 className={
                   link.mode === "sus" ? "pill pill-sus" : "pill pill-redirect"
@@ -91,55 +85,62 @@ export default function LinksTable({ links: initialLinks }) {
               >
                 {link.mode === "sus" ? "sus page" : "redirect"}
               </span>
-              <span className="dash-date">
-                {new Date(link.createdAt).toLocaleDateString(undefined, {
-                  year: "numeric",
-                  month: "short",
-                  day: "numeric",
-                })}
-              </span>
-              <span
-                className="dash-clicks"
-                title="Recorded clicks (flushed every few seconds)"
-              >
-                {link.clicks} hit{link.clicks === 1 ? "" : "s"}
-              </span>
             </div>
-            <div className="dash-actions">
-              <button
-                type="button"
-                className="btn btn-tiny"
-                onClick={() => copyRow(link)}
-              >
-                {copiedSlug === link.slug ? "Copied." : "Copy"}
-              </button>
-              {confirmSlug === link.slug ? (
-                <>
-                  <button
-                    type="button"
-                    className="btn btn-tiny btn-danger"
-                    disabled={busySlug === link.slug}
-                    onClick={() => deleteRow(link)}
-                  >
-                    {busySlug === link.slug ? "Deleting…" : "Sure?"}
-                  </button>
-                  <button
-                    type="button"
-                    className="btn btn-tiny"
-                    onClick={() => setConfirmSlug(null)}
-                  >
-                    Keep
-                  </button>
-                </>
-              ) : (
+            <span className="dash-target" title={link.target}>
+              {displayTarget(link.target)}
+            </span>
+            <div className="dash-foot">
+              <div className="dash-meta">
+                <span className="dash-date">
+                  {new Date(link.createdAt).toLocaleDateString(undefined, {
+                    year: "numeric",
+                    month: "short",
+                    day: "numeric",
+                  })}
+                </span>
+                <span
+                  className="dash-clicks"
+                  title="Recorded clicks (flushed every few seconds)"
+                >
+                  {link.clicks} hit{link.clicks === 1 ? "" : "s"}
+                </span>
+              </div>
+              <div className="dash-actions">
                 <button
                   type="button"
                   className="btn btn-tiny"
-                  onClick={() => setConfirmSlug(link.slug)}
+                  onClick={() => copyRow(link)}
                 >
-                  Delete
+                  {copiedSlug === link.slug ? "Copied." : "Copy"}
                 </button>
-              )}
+                {confirmSlug === link.slug ? (
+                  <>
+                    <button
+                      type="button"
+                      className="btn btn-tiny btn-danger"
+                      disabled={busySlug === link.slug}
+                      onClick={() => deleteRow(link)}
+                    >
+                      {busySlug === link.slug ? "Deleting…" : "Sure?"}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-tiny"
+                      onClick={() => setConfirmSlug(null)}
+                    >
+                      Keep
+                    </button>
+                  </>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-tiny"
+                    onClick={() => setConfirmSlug(link.slug)}
+                  >
+                    Delete
+                  </button>
+                )}
+              </div>
             </div>
           </li>
         ))}

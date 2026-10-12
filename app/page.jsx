@@ -12,19 +12,19 @@ export default async function HomePage() {
         Make any link <em>deeply suspicious.</em>
       </h1>
       <p className="lede">
-        Paste a legitimate URL. Get back a link with a name that inspires
-        absolutely no confidence. It still goes to the real site &mdash; the
-        vibe is the only thing that changes.
+        Turn harmless links into digital red flags. Watch your friends
+        double-check before they dare to click.
       </p>
 
       {user ? (
         <CreateForm />
       ) : (
         <div className="card auth-card">
-          <p className="placeholder-title">Link creation is for members.</p>
+          <p className="placeholder-title">Account required to create links.</p>
           <p className="placeholder-note">
-            <a href="/login">Log in or register</a> — it takes twenty seconds
-            and your links stay yours alone.
+            <a href="/login">Log in</a> or{" "}
+            <a href="/login?mode=register">register</a> in seconds. Your links
+            remain private to your account.
           </p>
         </div>
       )}

@@ -34,12 +34,6 @@ export default async function RootLayout({ children }) {
               ) : (
                 <>
                   <span className="tagline">100% legit. 0% trusted.</span>
-                  <a className="btn btn-tiny" href="/login">
-                    Log in
-                  </a>
-                  <a className="btn btn-tiny" href="/login?mode=register">
-                    Register
-                  </a>
                 </>
               )}
             </span>

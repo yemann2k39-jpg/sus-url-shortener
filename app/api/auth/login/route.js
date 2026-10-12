@@ -43,6 +43,15 @@ export async function POST(req) {
         { status: 401 }
       );
     }
+    if (!user.emailVerified) {
+      return NextResponse.json(
+        {
+          error: "Your email isn't verified yet. Check your inbox for the verification link, or resend it from the verify page.",
+          code: "unverified",
+        },
+        { status: 403 }
+      );
+    }
 
     const token = newSessionToken();
     sessionInsert(hashToken(token), user.id, sessionExpiry(7));

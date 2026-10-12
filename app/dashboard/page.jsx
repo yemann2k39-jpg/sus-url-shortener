@@ -10,7 +10,7 @@ export const metadata = {
   title: "Dashboard · Sus URL Shortener",
 };
 
-const PER_PAGE = 20;
+const PER_PAGE = 10;
 
 export default async function DashboardPage({ searchParams }) {
   const user = await getCurrentUser();
@@ -42,7 +42,7 @@ export default async function DashboardPage({ searchParams }) {
     <section className="dash">
       <div className="dash-head">
         <div>
-          <h1 className="dash-title">Your sus links</h1>
+          <h1 className="dash-title">Your links</h1>
           <p className="dash-count">
             {total === 0
               ? "zero and holding"
