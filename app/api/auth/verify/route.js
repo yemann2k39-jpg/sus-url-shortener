@@ -4,8 +4,9 @@ import { verificationTokenConsume, setUserEmailVerified, userById, sessionInsert
 
 /**
  * Email verification landing: GET /api/auth/verify?token=<raw>
- * Consumes the token, flags the account verified, and logs the user in.
- * Always redirects to the human /verify page for the outcome.
+ * Consumes the token, flags the account verified, logs the user in, and
+ * sends them straight to the dashboard. Invalid/expired tokens land on
+ * the /verify page with a resend form.
  */
 export async function GET(req) {
   const raw = req.nextUrl.searchParams.get("token") ?? "";
@@ -19,7 +20,8 @@ export async function GET(req) {
       if (user) {
         const token = newSessionToken();
         await sessionInsert(hashToken(token), user.id, sessionExpiry(7));
-        const resp = NextResponse.redirect(new URL("/verify?status=ok", req.nextUrl.origin), { status: 303 });
+        // Logged in on the spot: verification click = straight to the dashboard.
+        const resp = NextResponse.redirect(new URL("/dashboard", req.nextUrl.origin), { status: 303 });
         resp.cookies.set(SESSION_COOKIE, token, {
           httpOnly: true,
           sameSite: "lax",

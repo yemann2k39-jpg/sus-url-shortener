@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 
 export default function AuthForm({ initialTab = "login" }) {
@@ -14,6 +14,28 @@ export default function AuthForm({ initialTab = "login" }) {
   const [registered, setRegistered] = useState(null); // { email, devVerifyLink }
   const [unverified, setUnverified] = useState(false);
   const [remember, setRemember] = useState(false);
+  const pollRef = useRef(null);
+
+  // Register panel: once the user clicks the emailed link in any tab, the
+  // session cookie appears app-wide — poll for it and jump to the dashboard.
+  useEffect(() => {
+    if (!registered) return;
+    let cancelled = false;
+    pollRef.current = setInterval(async () => {
+      try {
+        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        if (res.ok && !cancelled) {
+          clearInterval(pollRef.current);
+          router.push("/dashboard");
+          router.refresh();
+        }
+      } catch {}
+    }, 3000);
+    return () => {
+      cancelled = true;
+      if (pollRef.current) clearInterval(pollRef.current);
+    };
+  }, [registered, router]);
 
   async function submit(event) {
     event.preventDefault();
@@ -64,7 +86,8 @@ export default function AuthForm({ initialTab = "login" }) {
         <p className="placeholder-title">Almost there — verify your email.</p>
         <p className="placeholder-note">
           We sent a verification link to <strong>{registered.email}</strong>.
-          Click it (within 24 hours) and your account goes live.
+          Click it (within 24 hours) and your account goes live — this page
+          will jump to your dashboard automatically the moment you do.
         </p>
         {registered.devVerifyLink && (
           <p className="placeholder-note">
