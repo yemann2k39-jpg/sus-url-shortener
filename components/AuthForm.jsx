@@ -15,20 +15,27 @@ export default function AuthForm({ initialTab = "login" }) {
   const [unverified, setUnverified] = useState(false);
   const [remember, setRemember] = useState(false);
   const pollRef = useRef(null);
+  const credsRef = useRef(null); // { identifier, password } kept in memory only
 
-  // Register panel: once the user clicks the emailed link in any tab, the
-  // session cookie appears app-wide — poll for it and jump to the dashboard.
+  // Register panel: keep trying a quiet login every 3s. While the account is
+  // unverified the server answers 403; the moment the emailed link is clicked
+  // (in any tab) the login succeeds and we hop to the dashboard ourselves.
   useEffect(() => {
-    if (!registered) return;
+    if (!registered || !credsRef.current) return;
     let cancelled = false;
     pollRef.current = setInterval(async () => {
       try {
-        const res = await fetch("/api/auth/me", { cache: "no-store" });
+        const res = await fetch("/api/auth/login", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(credsRef.current),
+        });
         if (res.ok && !cancelled) {
           clearInterval(pollRef.current);
           router.push("/dashboard");
           router.refresh();
         }
+        // 403 = not verified yet: keep waiting. Other errors: keep waiting too.
       } catch {}
     }, 3000);
     return () => {
@@ -55,6 +62,9 @@ export default function AuthForm({ initialTab = "login" }) {
       if (res.ok) {
         if (tab === "register") {
           // Verification is mandatory: no session yet — show the check-your-inbox panel.
+          // Remember the typed credentials in memory so the panel can auto-login
+          // once the emailed link is clicked.
+          credsRef.current = { identifier: username.trim(), password };
           setRegistered({ email: data.email ?? email.trim(), devVerifyLink: data.devVerifyLink ?? null });
           return;
         }
@@ -86,8 +96,8 @@ export default function AuthForm({ initialTab = "login" }) {
         <p className="placeholder-title">Almost there — verify your email.</p>
         <p className="placeholder-note">
           We sent a verification link to <strong>{registered.email}</strong>.
-          Click it (within 24 hours) and your account goes live — this page
-          will jump to your dashboard automatically the moment you do.
+          Click it, then close that tab — this page will log you in and take
+          you to your dashboard automatically within a few seconds.
         </p>
         {registered.devVerifyLink && (
           <p className="placeholder-note">

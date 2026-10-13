@@ -21,8 +21,10 @@ export default async function VerifyPage({ searchParams }) {
         <div className="card auth-card">
           <p className="placeholder-title">Email verified. You&rsquo;re in.</p>
           <p className="placeholder-note">
-            Your account is fully armed — head to your{" "}
-            <a href="/dashboard">dashboard</a> and make something suspicious.
+            You can close this tab — the page you signed up from will log you
+            in and take you to your{" "}
+            <a href="/dashboard">dashboard</a> automatically within a few
+            seconds.
           </p>
         </div>
       ) : status === "invalid" ? (
