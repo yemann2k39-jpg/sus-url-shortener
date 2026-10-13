@@ -414,7 +414,7 @@ main {
 
 .qr {
   display: block;
-  margin: 1.5rem auto 0.4rem;
+  margin: 1.5rem auto 1.1rem;
   border: 2px solid var(--border-ink);
   border-radius: 10px;
   box-shadow: 3px 3px 0 var(--border-ink);
@@ -807,7 +807,9 @@ main {
 
 /* QR preview modal (dashboard) + download button (result page) */
 .qr-download {
-  margin-top: 0.9rem;
+  display: block;
+  width: fit-content;
+  margin: 0 auto 1.1rem;
 }
 
 .qr-overlay {
