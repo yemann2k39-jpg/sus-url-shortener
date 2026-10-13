@@ -24,6 +24,7 @@ export default function CreateForm() {
   const [error, setError] = useState(null);
   const [result, setResult] = useState(null);
   const [qr, setQr] = useState(null);
+  const [qrBig, setQrBig] = useState(null);
   const [copied, setCopied] = useState(false);
 
   async function handleSubmit(event) {
@@ -47,13 +48,13 @@ export default function CreateForm() {
       const data = await res.json().catch(() => ({}));
       if (res.status === 201) {
         setResult(data);
-        QRCode.toDataURL(data.susUrl, {
-          margin: 1,
-          width: 240,
-          color: { dark: "#1c1917", light: "#ffffff" },
-        })
+        const opts = { margin: 1, color: { dark: "#1c1917", light: "#ffffff" } };
+        QRCode.toDataURL(data.susUrl, { ...opts, width: 240 })
           .then(setQr)
           .catch(() => setQr(null));
+        QRCode.toDataURL(data.susUrl, { ...opts, width: 480, margin: 2 })
+          .then(setQrBig)
+          .catch(() => setQrBig(null));
       } else {
         setError(data.error || "Something went sus on our side. Try again.");
       }
@@ -67,6 +68,7 @@ export default function CreateForm() {
   function reset() {
     setResult(null);
     setQr(null);
+    setQrBig(null);
     setCopied(false);
     setUrl("");
     setSlug("");
@@ -111,6 +113,15 @@ export default function CreateForm() {
           />
         ) : (
           <p className="result-note">QR code is camera-shy right now.</p>
+        )}
+        {qrBig && (
+          <a
+            className="btn btn-secondary qr-download"
+            download={`sus-qr-${result.slug}.png`}
+            href={qrBig}
+          >
+            Download QR code
+          </a>
         )}
         <button type="button" className="btn btn-ghost" onClick={reset}>
           Create another one

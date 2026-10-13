@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import QrModal from "@/components/QrModal";
 
 /** www.youtube.com/watch?v=abc… — host + path, protocol stripped. */
 function displayTarget(target) {
@@ -17,6 +18,7 @@ export default function LinksTable({ links: initialLinks }) {
   const [copiedSlug, setCopiedSlug] = useState(null);
   const [confirmSlug, setConfirmSlug] = useState(null);
   const [busySlug, setBusySlug] = useState(null);
+  const [qrLink, setQrLink] = useState(null);
   const [error, setError] = useState(null);
 
   async function copyRow(link) {
@@ -113,6 +115,13 @@ export default function LinksTable({ links: initialLinks }) {
                 >
                   {copiedSlug === link.slug ? "Copied." : "Copy"}
                 </button>
+                <button
+                  type="button"
+                  className="btn btn-tiny"
+                  onClick={() => setQrLink(link)}
+                >
+                  QR
+                </button>
                 {confirmSlug === link.slug ? (
                   <>
                     <button
@@ -145,6 +154,7 @@ export default function LinksTable({ links: initialLinks }) {
           </li>
         ))}
       </ul>
+      {qrLink && <QrModal link={qrLink} onClose={() => setQrLink(null)} />}
     </div>
   );
 }
