@@ -33,17 +33,11 @@ body {
 body {
   padding: 0.75rem;
   background-color: #fffdf8;
-  background-image:
-    radial-gradient(ellipse 40% 45% at 12% 20%, rgba(222, 43, 139, 0.48), transparent 70%),
-    radial-gradient(ellipse 45% 40% at 85% 12%, rgba(235, 214, 48, 0.45), transparent 65%),
-    radial-gradient(ellipse 35% 40% at 95% 40%, rgba(206, 98, 34, 0.40), transparent 60%),
-    radial-gradient(ellipse 40% 45% at 88% 82%, rgba(9, 122, 55, 0.45), transparent 65%),
-    radial-gradient(ellipse 45% 40% at 55% 90%, rgba(29, 113, 173, 0.40), transparent 60%),
-    radial-gradient(ellipse 40% 40% at 45% 45%, rgba(103, 57, 138, 0.35), transparent 60%),
-    radial-gradient(ellipse 30% 35% at 5% 85%, rgba(207, 51, 31, 0.35), transparent 55%);
+  background-image: url("/paint2.jpg");
   background-size: cover;
   background-position: center;
   background-attachment: fixed;
+  background-repeat: no-repeat;
   color: var(--ink);
   font-family:
     system-ui,
