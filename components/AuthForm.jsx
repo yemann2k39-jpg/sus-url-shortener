@@ -212,6 +212,12 @@ export default function AuthForm({ initialTab = "login" }) {
         <button className="btn btn-primary" type="submit" disabled={busy}>
           {busy ? "Working…" : tab === "login" ? "Log in" : "Create account"}
         </button>
+
+        {tab === "login" && (
+          <p className="field-hint">
+            <a href="/forgot-password">Forgot your password?</a>
+          </p>
+        )}
       </form>
     </div>
   );

@@ -16,6 +16,7 @@ export default async function LoginPage({ searchParams }) {
 
   const params = (await searchParams) ?? {};
   const initialTab = params.mode === "register" ? "register" : "login";
+  const resetOk = params.reset === "ok";
 
   return (
     <section className="hero">
@@ -26,6 +27,13 @@ export default async function LoginPage({ searchParams }) {
         Log in to manage your saved links. All your custom URLs are tied to
         your private account key so only you can view or edit them.
       </p>
+      {resetOk && (
+        <div className="card auth-card">
+          <p className="placeholder-title" role="status">
+            Password updated. Log in with your new password.
+          </p>
+        </div>
+      )}
       <AuthForm initialTab={initialTab} />
     </section>
   );
